@@ -294,7 +294,7 @@ function PatientDashboard({
         </div>
       </div>
 
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "28px 24px" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "40px 32px" }}>
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {[

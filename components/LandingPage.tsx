@@ -28,7 +28,7 @@ const DOCTORS = [
     rating: 4.9,
     patients: "1.2k+",
     available: "Tersedia hari ini",
-    img: "https://images.unsplash.com/photo-1673865641073-4479f93a7776?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400",
+    img: "/assets/dokter-1.png",
   },
   {
     name: "Dr. Ahmad Rizal, Sp.PD",
@@ -36,7 +36,7 @@ const DOCTORS = [
     rating: 4.8,
     patients: "980+",
     available: "Tersedia hari ini",
-    img: "https://images.unsplash.com/photo-1758691463393-a2aa9900af8a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400",
+    img: "/assets/dokter-2.png",
   },
   {
     name: "Dr. Citra Putri, Sp.P",
@@ -44,7 +44,7 @@ const DOCTORS = [
     rating: 4.9,
     patients: "870+",
     available: "Tersedia besok",
-    img: "https://images.unsplash.com/photo-1686737357932-ae1c50492a9e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400",
+    img: "/assets/dokter-3.png",
   },
   {
     name: "Dr. Budi Santoso, Sp.S",
@@ -52,7 +52,7 @@ const DOCTORS = [
     rating: 4.7,
     patients: "760+",
     available: "Tersedia hari ini",
-    img: "https://images.unsplash.com/photo-1645066928295-2506defde470?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400",
+    img: "/assets/dokter-4.png",
   },
 ];
 

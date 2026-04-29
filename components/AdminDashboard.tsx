@@ -729,7 +729,7 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
       </div>
 
       {/* Content */}
-      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "32px 24px" }}>
+      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "40px 32px" }}>
         {activeTab === "overview" && (
           <OverviewTab
             totalUsers={totalUsers}
@@ -883,15 +883,15 @@ function OverviewTab({
               </div>
               <div
                 style={{
-                  fontSize: 28,
+                  fontSize: 32,
                   fontWeight: 700,
                   color: "#0f2420",
-                  marginBottom: 4,
+                  marginBottom: 6,
                 }}
               >
                 {stat.value}
               </div>
-              <div style={{ fontSize: 13, color: "#7a9e96" }}>{stat.label}</div>
+              <div style={{ fontSize: 15, color: "#7a9e96" }}>{stat.label}</div>
             </div>
           );
         })}
@@ -908,23 +908,23 @@ function OverviewTab({
         <div
           style={{
             background: "white",
-            borderRadius: 16,
-            padding: "24px 26px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+            borderRadius: 20,
+            padding: "28px 30px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
             border: "1px solid #e5f0ed",
           }}
         >
           <h3
             style={{
-              fontSize: 16,
+              fontSize: 18,
               fontWeight: 600,
               color: "#0f2420",
-              marginBottom: 18,
+              marginBottom: 20,
             }}
           >
             Status Janji Temu
           </h3>
-          <ResponsiveContainer width="100%" height={260}>
+          <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
                 data={appointmentStatusData}

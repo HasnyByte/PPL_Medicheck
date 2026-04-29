@@ -624,9 +624,9 @@ export function ChatSection({ onComplete, onBack }: ChatSectionProps) {
           boxSizing: "border-box",
         }}
       >
-        {messages.map((msg) => (
+        {messages.map((msg, index) => (
           <div
-            key={msg.id}
+            key={`${msg.id}-${index}-${msg.role}`}
             style={{
               display: "flex",
               flexDirection: msg.role === "user" ? "row-reverse" : "row",
