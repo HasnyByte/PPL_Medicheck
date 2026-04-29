@@ -28,7 +28,7 @@ const DOCTORS = [
     rating: 4.9,
     patients: "1.2k+",
     available: "Tersedia hari ini",
-    img: "/assets/dokter-1.png",
+    img: "/assets/dokter-1.jpg",
   },
   {
     name: "Dr. Ahmad Rizal, Sp.PD",
@@ -36,7 +36,7 @@ const DOCTORS = [
     rating: 4.8,
     patients: "980+",
     available: "Tersedia hari ini",
-    img: "/assets/dokter-2.png",
+    img: "/assets/dokter-2.jpg",
   },
   {
     name: "Dr. Citra Putri, Sp.P",
@@ -44,7 +44,7 @@ const DOCTORS = [
     rating: 4.9,
     patients: "870+",
     available: "Tersedia besok",
-    img: "/assets/dokter-3.png",
+    img: "/assets/dokter-3.jpg",
   },
   {
     name: "Dr. Budi Santoso, Sp.S",
@@ -52,7 +52,7 @@ const DOCTORS = [
     rating: 4.7,
     patients: "760+",
     available: "Tersedia hari ini",
-    img: "/assets/dokter-4.png",
+    img: "/assets/dokter-4.jpg",
   },
 ];
 
