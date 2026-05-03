@@ -290,6 +290,8 @@ export function ChatSection({ onComplete, onBack }: ChatSectionProps) {
   const [detectedScore, setDetectedScore] = useState(0);
   const [severity, setSeverity] = useState("");
   const [duration, setDuration] = useState("");
+  // const [initialized, setInitialized] = useState(false);
+  const initializedRef = useRef(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const scrollBottom = useCallback(() => {
@@ -305,16 +307,17 @@ export function ChatSection({ onComplete, onBack }: ChatSectionProps) {
       return new Promise<void>((resolve) => {
         setTimeout(() => {
           setIsTyping(false);
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: Date.now().toString(),
-              role: "ai",
-              content,
-              quickReplies,
-              timestamp: new Date(),
-            },
-          ]);
+          const newMessage = {
+            id: crypto.randomUUID(),
+            role: "ai" as const,
+            content,
+            quickReplies,
+            timestamp: new Date(),
+          };
+          setMessages((prev) => {
+            if (prev.some((m) => m.id === newMessage.id)) return prev;
+            return [...prev, newMessage];
+          });
           scrollBottom();
           resolve();
         }, delay);
@@ -325,15 +328,16 @@ export function ChatSection({ onComplete, onBack }: ChatSectionProps) {
 
   const addUserMessage = useCallback(
     (content: string) => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now().toString(),
-          role: "user",
-          content,
-          timestamp: new Date(),
-        },
-      ]);
+      const newMessage = {
+        id: crypto.randomUUID(),
+        role: "user" as const,
+        content,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => {
+        if (prev.some((m) => m.id === newMessage.id)) return prev;
+        return [...prev, newMessage];
+      });
       scrollBottom();
     },
     [scrollBottom],
@@ -341,6 +345,9 @@ export function ChatSection({ onComplete, onBack }: ChatSectionProps) {
 
   // Initialize
   useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true; // ✅ langsung set, tidak trigger re-render
+
     (async () => {
       await addAiMessage(
         "Selamat datang di MediCheck. Saya adalah Asisten Medis AI yang siap membantu Anda melakukan pemeriksaan gejala awal.",
@@ -354,7 +361,24 @@ export function ChatSection({ onComplete, onBack }: ChatSectionProps) {
       );
       setStage("awaiting_complaint");
     })();
-  }, []);
+  }, [addAiMessage]);
+  // useEffect(() => {
+  //   if (initialized) return;
+  //   setInitialized(true);
+  //   (async () => {
+  //     await addAiMessage(
+  //       "Selamat datang di MediCheck. Saya adalah Asisten Medis AI yang siap membantu Anda melakukan pemeriksaan gejala awal.",
+  //       undefined,
+  //       600,
+  //     );
+  //     await addAiMessage(
+  //       "Silakan ceritakan keluhan utama yang Anda rasakan saat ini. Jelaskan gejala sejelas mungkin untuk hasil yang lebih akurat.",
+  //       undefined,
+  //       700,
+  //     );
+  //     setStage("awaiting_complaint");
+  //   })();
+  // }, [addAiMessage, initialized]);
 
   const handleUserInput = useCallback(
     async (text: string) => {
@@ -502,7 +526,6 @@ export function ChatSection({ onComplete, onBack }: ChatSectionProps) {
     [
       stage,
       messages,
-      complaint,
       detectedKey,
       detectedScore,
       severity,
