@@ -24,6 +24,10 @@ type ChatStage =
   | "analyzing"
   | "complete";
 
+// API configuration
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+// Emergency keywords for quick client-side check
 const EMERGENCY_KEYWORDS = [
   "nyeri dada",
   "sesak napas berat",
@@ -175,6 +179,49 @@ function calcConfidence(
   return Math.min(94, Math.max(58, c));
 }
 
+/**
+ * Call backend API to analyze symptoms
+ */
+async function analyzeWithBackend(
+  complaint: string,
+  severity: string,
+  duration: string,
+  additionalSymptoms: string,
+): Promise<ScreeningResult> {
+  const response = await fetch(`${API_BASE_URL}/api/screening/analyze`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      complaint,
+      severity,
+      duration,
+      additional_symptoms: additionalSymptoms,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    if (response.status === 400 && errorData.detail?.includes("darurat")) {
+      throw new Error("EMERGENCY_DETECTED");
+    }
+    throw new Error(errorData.detail || "Analisis gagal");
+  }
+
+  const data = await response.json();
+  return {
+    disease: data.disease,
+    confidence: data.confidence,
+    tips: data.tips,
+    specialist: data.specialist,
+    specialistCode: data.specialistCode,
+    isEmergency: false,
+    symptoms: data.symptoms,
+    timestamp: new Date(),
+  };
+}
+
 function TypingIndicator() {
   return (
     <div style={{ display: "flex", alignItems: "flex-end", gap: 8 }}>
@@ -238,6 +285,7 @@ export function ChatSection({ onComplete, onBack }: ChatSectionProps) {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [isEmergency, setIsEmergency] = useState(false);
+  const [complaint, setComplaint] = useState("");
   const [detectedKey, setDetectedKey] = useState("");
   const [detectedScore, setDetectedScore] = useState(0);
   const [severity, setSeverity] = useState("");
@@ -329,6 +377,7 @@ export function ChatSection({ onComplete, onBack }: ChatSectionProps) {
       }
 
       if (stage === "awaiting_complaint") {
+        setComplaint(text);
         const detected = detectDisease(text);
         setDetectedKey(detected.key);
         setDetectedScore(detected.score);
@@ -398,7 +447,7 @@ export function ChatSection({ onComplete, onBack }: ChatSectionProps) {
         );
         setStage("asking_additional");
       } else if (stage === "asking_additional") {
-        // Analyze
+        // Send to backend for analysis
         setStage("analyzing");
         await addAiMessage(
           "Baik, saya memiliki cukup informasi. Sedang menganalisis gejala Anda...",
@@ -406,40 +455,54 @@ export function ChatSection({ onComplete, onBack }: ChatSectionProps) {
           500,
         );
         setIsTyping(true);
-        await new Promise((r) => setTimeout(r, 2800));
-        setIsTyping(false);
 
-        const conf = calcConfidence(detectedScore, severity, duration);
-        const disease = DISEASE_MAP[detectedKey] || DISEASE_MAP["demam"];
+        try {
+          const result = await analyzeWithBackend(
+            complaint,
+            severity,
+            duration,
+            text,
+          );
 
-        const result: ScreeningResult = {
-          disease: disease.name,
-          confidence: conf,
-          tips: disease.tips,
-          specialist: disease.specialist,
-          specialistCode: disease.specialistCode,
-          isEmergency: false,
-          symptoms: text,
-          timestamp: new Date(),
-        };
+          setIsTyping(false);
+          await addAiMessage(
+            `Analisis selesai. Berdasarkan gejala yang Anda sampaikan, AI kami mendeteksi kemungkinan kondisi: ${result.disease} dengan tingkat kepercayaan ${result.confidence}%.`,
+            undefined,
+            400,
+          );
+          await addAiMessage(
+            "Lihat hasil lengkap beserta rekomendasi awal dan pilihan dokter spesialis di halaman hasil.",
+            undefined,
+            600,
+          );
+          setStage("complete");
+          setTimeout(() => onComplete(result), 1200);
+        } catch (error: any) {
+          setIsTyping(false);
+          const errorMessage = error.message || "Analisis gagal";
 
-        await addAiMessage(
-          `Analisis selesai. Berdasarkan gejala yang Anda sampaikan, AI kami mendeteksi kemungkinan kondisi: ${disease.name} dengan tingkat kepercayaan ${conf}%.`,
-          undefined,
-          400,
-        );
-        await addAiMessage(
-          "Lihat hasil lengkap beserta rekomendasi awal dan pilihan dokter spesialis di halaman hasil.",
-          undefined,
-          600,
-        );
-        setStage("complete");
-        setTimeout(() => onComplete(result), 1200);
+          if (errorMessage === "EMERGENCY_DETECTED") {
+            setIsEmergency(true);
+            setStage("complete");
+            await addAiMessage(
+              "Perhatian: Saya mendeteksi kata kunci yang mengindikasikan kondisi darurat medis. Mohon segera hubungi layanan darurat atau menuju IGD/UGD terdekat.",
+              undefined,
+              500,
+            );
+          } else {
+            await addAiMessage(
+              "Maaf, terjadi kesalahan dalam menganalisis gejala Anda. Silakan coba lagi.",
+              undefined,
+              500,
+            );
+          }
+        }
       }
     },
     [
       stage,
       messages,
+      complaint,
       detectedKey,
       detectedScore,
       severity,
