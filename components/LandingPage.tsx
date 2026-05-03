@@ -236,7 +236,7 @@ export function LandingPage({ onStartChat }: LandingPageProps) {
           style={{
             maxWidth: 1200,
             margin: "0 auto",
-            padding: "60px 24px",
+            padding: "70px 32px",
             width: "100%",
           }}
         >
@@ -277,17 +277,26 @@ export function LandingPage({ onStartChat }: LandingPageProps) {
 
               <h1
                 style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: "clamp(38px, 5vw, 62px)",
+                 fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: "clamp(36px, 4vw, 56px)",
                   fontWeight: 600,
-                  lineHeight: 1.12,
+                  lineHeight: 1.2,
                   color: "#0f2420",
                   marginBottom: 20,
+                  // whiteSpace: "nowrap",
+                  maxWidth: 520,
+                  // overflow: "hidden",
+                  // textOverflow: "ellipsis",
                 }}
               >
                 Periksa Gejala Anda
-                <br />
-                <span style={{ color: "#2a6e5e", fontStyle: "italic" }}>
+                <span
+                  style={{
+                    color: "#2a6e5e",
+                    fontStyle: "italic",
+                    display: "block",
+                  }}
+                >
                   Dengan Kecerdasan Buatan
                 </span>
               </h1>

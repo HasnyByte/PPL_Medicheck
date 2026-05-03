@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { ElementType } from "react";
 import { X, Eye, EyeOff, User, Mail, Lock } from "lucide-react";
 import type { User as UserType } from "../app/App";
 
@@ -25,6 +26,71 @@ const MOCK_USERS: UserType[] = [
     role: "admin",
   },
 ];
+
+interface InputFieldProps {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+  placeholder: string;
+  icon: ElementType;
+}
+
+function InputField({
+  label,
+  value,
+  onChange,
+  type = "text",
+  placeholder,
+  icon: Icon,
+}: InputFieldProps) {
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <label
+        style={{
+          display: "block",
+          fontSize: 13,
+          fontWeight: 500,
+          color: "#3d6058",
+          marginBottom: 6,
+        }}
+      >
+        {label}
+      </label>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          background: "#f8fcfa",
+          border: "1.5px solid #c8dfd8",
+          borderRadius: 12,
+          padding: "10px 14px",
+          transition: "border-color 0.15s",
+        }}
+        onFocusCapture={(e) => (e.currentTarget.style.borderColor = "#2a6e5e")}
+        onBlurCapture={(e) => (e.currentTarget.style.borderColor = "#c8dfd8")}
+      >
+        <Icon size={15} color="#7a9e96" />
+        <input
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          style={{
+            flex: 1,
+            border: "none",
+            background: "transparent",
+            outline: "none",
+            fontSize: 14,
+            color: "#1a2e28",
+            fontFamily: "'Outfit', sans-serif",
+          }}
+        />
+      </div>
+    </div>
+  );
+}
 
 export function AuthModal({
   open,
@@ -72,67 +138,6 @@ export function AuthModal({
     }
     setLoading(false);
   };
-
-  const InputField = ({
-    label,
-    value,
-    onChange,
-    type = "text",
-    placeholder,
-    icon: Icon,
-  }: {
-    label: string;
-    value: string;
-    onChange: (v: string) => void;
-    type?: string;
-    placeholder: string;
-    icon: React.ElementType;
-  }) => (
-    <div style={{ marginBottom: 16 }}>
-      <label
-        style={{
-          display: "block",
-          fontSize: 13,
-          fontWeight: 500,
-          color: "#3d6058",
-          marginBottom: 6,
-        }}
-      >
-        {label}
-      </label>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          background: "#f8fcfa",
-          border: "1.5px solid #c8dfd8",
-          borderRadius: 12,
-          padding: "10px 14px",
-          transition: "border-color 0.15s",
-        }}
-        onFocusCapture={(e) => (e.currentTarget.style.borderColor = "#2a6e5e")}
-        onBlurCapture={(e) => (e.currentTarget.style.borderColor = "#c8dfd8")}
-      >
-        <Icon size={15} color="#7a9e96" />
-        <input
-          type={type}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          style={{
-            flex: 1,
-            border: "none",
-            background: "transparent",
-            outline: "none",
-            fontSize: 14,
-            color: "#1a2e28",
-            fontFamily: "'Outfit', sans-serif",
-          }}
-        />
-      </div>
-    </div>
-  );
 
   return (
     <>
