@@ -29,7 +29,7 @@ rag-chatbot/
 
 ```bash
 # 1. Clone / salin folder ini
-cd rag-chatbot
+cd backend-ai
 
 # 2. Install dependencies
 pip install -r requirements.txt
@@ -37,11 +37,6 @@ pip install -r requirements.txt
 # 3. Salin dan isi konfigurasi
 cp .env.example .env
 # Edit .env dengan API key dan koneksi TiDB kamu
-
-# 4. (Opsional) Ingest dokumen penyakit ke TiDB
-python ingest.py --file data/penyakit.json
-# Atau tanpa argumen untuk contoh data:
-python ingest.py
 
 # 5. Jalankan server
 python main.py
