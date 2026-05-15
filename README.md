@@ -166,6 +166,137 @@ http://localhost:3000
 
 ---
 
+Berikut step-by-step lengkap cara menjalankan backend Medicheck kamu dari awal sampai berhasil jalan 🚀
+
+STEP 1 — Buka folder backend
+
+Masuk ke terminal VS Code atau PowerShell:
+
+cd C:\Users\USER DK\Downloads\medicheck_v3_final\medicheck_v3\backend
+STEP 2 — Pastikan PostgreSQL hidup
+
+Sebelum backend dijalankan, database PostgreSQL harus aktif.
+
+Cara cek:
+
+Tekan Windows
+Cari:
+Services
+Cari:
+postgresql
+Pastikan status:
+Running
+
+Kalau belum:
+
+klik kanan
+Start
+STEP 3 — Pastikan file .env benar
+
+Buka file:
+
+backend/.env
+
+Isi contoh:
+
+DATABASE_URL="postgresql://postgres:123456@localhost:5432/medicheck"
+
+JWT_SECRET="medicheck_secret"
+
+PORT=4000
+
+Ganti:
+
+123456 → password PostgreSQL kamu
+STEP 4 — Install dependency backend
+
+Jalankan:
+
+npm install
+
+Tunggu sampai selesai.
+
+STEP 5 — Generate Prisma Client
+
+Jalankan:
+
+npx prisma generate
+
+Kalau berhasil muncul:
+
+✔ Generated Prisma Client
+STEP 6 — Jalankan migrate database
+
+Jalankan:
+
+npx prisma migrate dev
+
+Kalau berhasil muncul:
+
+Your database is now in sync with your schema.
+STEP 7 — Jalankan backend
+
+Jalankan:
+
+npm run dev
+
+Kalau berhasil:
+
+✅ Backend listening on http://localhost:4000
+STEP 8 — Test backend
+
+Buka browser:
+
+http://localhost:4000
+
+atau endpoint lain seperti:
+
+http://localhost:4000/api/doctors
+
+Kalau muncul JSON/data berarti backend sukses.
+
+STEP 9 — Jalankan frontend
+
+Buka terminal baru:
+
+cd C:\Users\USER DK\Downloads\medicheck_v3_final\medicheck_v3\frontend
+
+Lalu:
+
+npm install
+npm run dev
+
+Frontend biasanya jalan di:
+
+http://localhost:3000
+Urutan setiap kali mau menjalankan project
+
+Kalau project sudah pernah setup, cukup:
+
+Terminal 1 (backend)
+cd backend
+npm run dev
+Terminal 2 (frontend)
+cd frontend
+npm run dev
+Kalau muncul error lagi
+
+Biasanya:
+
+PostgreSQL mati
+.env salah
+port bentrok
+dependency belum install
+
+Dan untuk PowerShell Windows:
+❌ jangan pakai:
+
+rm -rf
+
+✅ pakai:
+
+Remove-Item -Recurse -Force node_modules
+
 ## 🔄 Alur Sistem
 
 1. Pasien memasukkan gejala
