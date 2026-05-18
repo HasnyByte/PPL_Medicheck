@@ -36,7 +36,7 @@ const DOCTORS = [
     rating: 4.8,
     patients: "980+",
     available: "Tersedia hari ini",
-    img: "/ assets/dokter-2.jpg",
+    img: "/assets/dokter-2.jpg",
   },
   {
     name: "Dr. Citra Putri, Sp.P",
