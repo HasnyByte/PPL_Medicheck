@@ -182,7 +182,7 @@ export function BookingFlow({ result, user, onSuccess, onBack }: BookingFlowProp
 
             <div style={{ display: "flex", alignItems: "center", gap: 10, color: "#5a7870", fontSize: 13, marginBottom: 28, padding: "12px 16px", background: "#f0f9f6", borderRadius: 12 }}>
               <User size={14} color="#2a6e5e" />
-              <span>Booking atas nama: <strong style={{ color: "#0f2420" }}>{user.name}</strong></span>
+              <span>Booking atas nama: <strong style={{ color: "#0f2420" }}>{user?.name}</strong></span>
             </div>
             <button onClick={() => setStep(2)}
               style={{ width: "100%", padding: "14px 0", borderRadius: 13, background: "#2a6e5e", border: "none", color: "white", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "'Outfit', sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: "0 4px 16px rgba(42,110,94,0.25)" }}>
@@ -389,7 +389,7 @@ export function BookingFlow({ result, user, onSuccess, onBack }: BookingFlowProp
               {[
                 { icon: Calendar, label: "Tanggal", value: new Intl.DateTimeFormat("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(selectedDate) },
                 { icon: Clock, label: "Waktu", value: selectedTime + " WIB" },
-                { icon: User, label: "Pasien", value: user.name },
+                { icon: User, label: "Pasien", value: user?.name },
                 { icon: Stethoscope, label: "Keluhan", value: result.disease },
               ].map(({ icon: Icon, label, value }) => (
                 <div key={label} style={{ background: "#f8fcfa", borderRadius: 14, padding: "14px 16px", border: "1px solid #e8f5f1" }}>

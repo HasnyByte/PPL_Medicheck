@@ -264,7 +264,7 @@ function BookingPanel({
 }
 
 // ──────────── MAIN DOCTOR DASHBOARD ────────────
-export function DoctorDashboard({ user }: DoctorDashboardProps) {
+export function DoctorDashboard({ user, onUserUpdate }: DoctorDashboardProps) {
   const [tab, setTab] = useState<DoctorTab>("overview");
   const [bookingsList, setBookingsList] = useState<Booking[]>([]);
   const [medicalRecordsList, setMedicalRecordsList] = useState<MedicalRecord[]>([]);

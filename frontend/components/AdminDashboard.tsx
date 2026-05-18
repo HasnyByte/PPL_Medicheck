@@ -531,7 +531,8 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
       usersApi.list(),
       bookingsApi.list(),
       statsApi.admin(),
-    ]).then(([apiUsers, apiBookings, s]) => {
+      screeningsApi.list(),
+    ]).then(([apiUsers, apiBookings, s, screeningsList]) => {
       const mappedUsers: SystemUser[] = apiUsers.map((u: ApiUser) => ({
         id: u.id,
         name: u.name,
@@ -562,13 +563,23 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
         timestamp: new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeStyle: "short" }).format(new Date(b.createdAt)),
         type: b.status === "Selesai" ? "success" : b.status === "Dibatalkan" ? "warning" : b.status === "Terkonfirmasi" ? "info" : "info",
       }));
+      // const scLogs: ActivityLog[] = (screeningsList as Screening[]).slice(0, 10).map(sc => ({
+      //   id: sc.id,
+      //   user: "Pasien",
+      //   action: `Screening AI: ${sc.disease} — ${sc.specialist}`,
+      //   timestamp: new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeStyle: "short" }).format(new Date(sc.createdAt)),
+      //   type: sc.isEmergency ? "error" : "success",
+      // }));
       const scLogs: ActivityLog[] = (screeningsList as Screening[]).slice(0, 10).map(sc => ({
         id: sc.id,
         user: "Pasien",
         action: `Screening AI: ${sc.disease} — ${sc.specialist}`,
-        timestamp: new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeStyle: "short" }).format(new Date(sc.createdAt)),
+        timestamp: new Intl.DateTimeFormat("id-ID", { 
+        dateStyle: "medium", 
+        timeStyle: "short" 
+        }).format(new Date(sc.createdAt)),
         type: sc.isEmergency ? "error" : "success",
-      }));
+    }));
       setActivityLogs([...logs, ...scLogs].sort((a, b) => b.id.localeCompare(a.id)).slice(0, 20));
     }).catch(() => {}).finally(() => setIsRefreshing(false));
   }, []);
