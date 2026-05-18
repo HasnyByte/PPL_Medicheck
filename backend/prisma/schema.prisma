@@ -1,0 +1,117 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("patient")
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  specialist      String?
+  specialistCode  String?
+  hospital        String?
+  hospitalAddress String?
+  bio             String?
+  photoUrl        String?
+  experience      Int?
+  education       String?
+  licenseNumber   String?
+  consultationFee Int?
+  isVerified      Boolean @default(false)
+
+  bookings       Booking[]       @relation("PatientBookings")
+  doctorBookings Booking[]       @relation("DoctorBookings")
+  medicalRecords MedicalRecord[] @relation("DoctorRecords")
+  patientRecords MedicalRecord[] @relation("PatientRecords")
+  schedules      DoctorSchedule[]
+  notifications  Notification[]
+  screenings     Screening[]
+}
+
+model Booking {
+  id        String   @id @default(uuid())
+  userId    String
+  doctorId  String
+  date      DateTime
+  time      String
+  disease   String
+  status    String   @default("Menunggu")
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user          User           @relation("PatientBookings", fields: [userId], references: [id], onDelete: Cascade)
+  doctor        User           @relation("DoctorBookings", fields: [doctorId], references: [id], onDelete: Cascade)
+  medicalRecord MedicalRecord?
+}
+
+model MedicalRecord {
+  id           String    @id @default(uuid())
+  bookingId    String    @unique
+  patientId    String
+  doctorId     String
+  diagnosis    String
+  prescription String?
+  notes        String?
+  followUpDate DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  patient User    @relation("PatientRecords", fields: [patientId], references: [id], onDelete: Cascade)
+  doctor  User    @relation("DoctorRecords", fields: [doctorId], references: [id], onDelete: Cascade)
+}
+
+model DoctorSchedule {
+  id        String   @id @default(uuid())
+  doctorId  String
+  dayOfWeek Int
+  startTime String
+  endTime   String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  doctor User @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+}
+
+model Screening {
+  id             String   @id @default(uuid())
+  userId         String?
+  disease        String
+  confidence     Int      @default(0)
+  symptoms       String
+  specialist     String   @default("Dokter Umum")
+  specialistCode String   @default("umum")
+  isEmergency    Boolean  @default(false)
+  tips           String[]
+  rawInput       String?
+  severity       String?
+  duration       String?
+  createdAt      DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  type      String   @default("info")
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
